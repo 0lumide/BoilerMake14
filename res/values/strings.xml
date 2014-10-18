@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">boilerMake</string>
+    <string name="backgroundDes">Background Image</string>
+    <string name="action_settings">Settings</string>
+    <string name="defaultPercent">75%</string>
+    <string name="empty"></string>
+
+</resources>
