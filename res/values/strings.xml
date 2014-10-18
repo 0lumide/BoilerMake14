@@ -6,5 +6,13 @@
     <string name="action_settings">Settings</string>
     <string name="defaultPercent">75%</string>
     <string name="empty"></string>
+    <string name="title_activity_info">Background info</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="sleepInfo">How many hours of sleep have you had?</string>
+    <string name="drinkInfo">How many caffeinated drinks have you had?</string>
+    <string name="codoInfo">How long have you been hacking nonstop?</string>
+    <string name="zero">0</string>
+    <string name="save">Save</string>
+    <string name="infoInstruction">It\'ll be awesome if you entered some background info</string>
 
 </resources>

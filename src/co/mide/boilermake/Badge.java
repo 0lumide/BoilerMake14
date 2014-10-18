@@ -9,6 +9,9 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -37,17 +40,47 @@ public class Badge extends ActionBarActivity {
 	private int centerY;
 	private TextView lifeDisplay;
 	int count;
+	private SharedPreferences p;
+	private Editor e;
+	private int sleep;
+	private int drink;
+	private int codo;
 	private final int numTicks = 14;
 	private ImageButton[] ticks;
 	private double[][] tickPos;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		//Check if data exists
+		p = getSharedPreferences("boilermake", MODE_PRIVATE);
+		if(!p.contains("sleep")||!p.contains("drink")||!p.contains("codo")){
+			Intent info = new Intent(this, Info.class);
+			startActivity(info);
+			this.finish();
+		}
+		else{
+			sleep = p.getInt("sleep", -1);
+			drink = p.getInt("drink", -1);
+			codo = p.getInt("codo", -1);
+			//calculate percent
+			int s, d, c;
+			d = drink;
+			s = sleep;
+			c = codo;
+			if(drink > 3)
+				d = 3;
+			if(sleep > 5)
+				s = 5;
+			percent = (float)((s * 20.0) + (d * 10.0) - (c * 10.0));
+			if(percent < 0)
+				percent = 0;
+			lifeCount = (percent/(100f/numTicks));
+		}
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_badge);
 		background = (ImageView) findViewById(R.id.background);
 		lifeDisplay = (TextView)findViewById(R.id.lifeDisplay);
 		tickPos = new double[numTicks][3];
-		getPercent();
 		ViewTreeObserver vto = background.getViewTreeObserver();
 		vto.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
 		    @SuppressWarnings("deprecation")
@@ -70,12 +103,6 @@ public class Badge extends ActionBarActivity {
 		});
 	}
 
-	void getPercent(){
-		//This should read the percent from memory 
-		//but now I'll just use 75.5%
-		percent = 75.5f;
-		lifeCount = (percent/(100f/numTicks));
-	}
 	@SuppressLint("NewApi")
 	void positionButtons(int r){
 		ticks[0] = (ImageButton)findViewById(R.id.tick1);
@@ -104,21 +131,7 @@ public class Badge extends ActionBarActivity {
 		}
 		startAnimation();
 	}
-	@SuppressLint("NewApi")
-	void animateLight(int i){
-		/*ValueAnimator anim = ValueAnimator.ofInt(((ColorDrawable)ticks[i].getBackground()).getColor(), Color.parseColor("#0000ff"));
-		final int temp = i;
-		anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-		    @SuppressLint("NewApi")
-			@Override
-		    public void onAnimationUpdate(ValueAnimator animation) {
-		    	ticks[temp].setBackground((Drawable) animation.getAnimatedValue());
-		    }
-		});
 
-		anim.start();*/
-		ticks[i].setBackground(new ColorDrawable(Color.parseColor("#0000ff")));
-	}
 	void animateHealth(int i){
 		//TODO
 		//create new thread
@@ -130,8 +143,12 @@ public class Badge extends ActionBarActivity {
 			@Override
             public void run() {
             	ticks[temp].setBackground(new ColorDrawable(Color.parseColor("#00ff00")));
-            	if((temp+1) < lifeCount)
+            	if((temp+1) < lifeCount){
+            		lifeDisplay.setText(String.format("%.2f%%",(temp*(100f/numTicks))));
             		animateHealth(temp + 1);
+            	}
+            	else
+            		lifeDisplay.setText(String.format("%.2f%%",percent));
             }
        }, 50);
 	}
