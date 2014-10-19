@@ -29,7 +29,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class Badge extends ActionBarActivity {
-	private ImageView background;
+	private MyImageView background;
 	private final double radiusRatio = 0.63;
 	private int radius;
 	private double tickWidth;
@@ -48,6 +48,16 @@ public class Badge extends ActionBarActivity {
 	private final int numTicks = 14;
 	private ImageButton[] ticks;
 	private double[][] tickPos;
+	
+	public int getCentX(){
+		return centerX;
+	}
+	public int getCentY(){
+		return centerY;
+	}
+	public int getRad(){
+		return radius;
+	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		//Check if data exists
@@ -61,6 +71,7 @@ public class Badge extends ActionBarActivity {
 			sleep = p.getInt("sleep", -1);
 			drink = p.getInt("drink", -1);
 			codo = p.getInt("codo", -1);
+			
 			//calculate percent
 			int s, d, c;
 			d = drink;
@@ -78,7 +89,8 @@ public class Badge extends ActionBarActivity {
 		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_badge);
-		background = (ImageView) findViewById(R.id.background);
+		background = (MyImageView) findViewById(R.id.background);
+		background.setBadge(this);
 		lifeDisplay = (TextView)findViewById(R.id.lifeDisplay);
 		tickPos = new double[numTicks][3];
 		ViewTreeObserver vto = background.getViewTreeObserver();
@@ -243,5 +255,11 @@ public class Badge extends ActionBarActivity {
 	//
 	public void textClick(View v){
 		
+	}
+	public void bigClick(){
+		Intent act = new Intent(this, SelectAction.class);
+		startActivity(act);
+		//this.overridePendingTransition(android.R.anim.slide_in_left,
+         //       android.R.anim.slide_out_right);
 	}
 }

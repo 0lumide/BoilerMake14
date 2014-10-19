@@ -13,6 +13,8 @@
     <string name="codoInfo">How long have you been hacking nonstop?</string>
     <string name="zero">0</string>
     <string name="save">Save</string>
+    <string name="yes">Yes</string>
     <string name="infoInstruction">It\'ll be awesome if you entered some background info</string>
+    <string name="title_activity_select_action">SelectAction</string>
 
 </resources>
